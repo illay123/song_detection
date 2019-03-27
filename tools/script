@@ -1,0 +1,24 @@
+import os
+import librosa as lb
+
+partTime = 10 #change here for the time interval you need
+
+folder =  "C:\\Users\\Illay\\Desktop\\source\\am" #change here for your folder path
+
+def cutNSeconds(song, sec,sr):
+    return [song[i*sr*sec:(i+1)*sr*sec] for i in range(int(lb.core.get_duration(song)/sec))]
+    
+
+
+ssl = []
+for file in os.listdir(folder):
+    if ".wav" in file:
+        audio_path = folder+"\\"+file
+        x , sr = lb.load(audio_path)
+        print(file, sr)
+        ssl+=cutNSeconds(x,partTime,sr)
+
+#save
+for i in range(len(ssl)):
+    lb.output.write_wav(folder+"\\p"+str(partTime)+'\\'+str(i),ssl[i],sr)
+print("Successfully created "+len(ssl)+"files")
